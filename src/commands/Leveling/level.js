@@ -1,49 +1,4 @@
-import { getColor } from '../../config/bot.js';
-import { SlashCommandBuilder, PermissionFlagsBits, ChannelType, MessageFlags } from 'discord.js';
-import { createEmbed, errorEmbed } from '../../utils/embeds.js';
-import { getLevelingConfig, saveLevelingConfig } from '../../services/leveling.js';
-import { botHasPermission } from '../../utils/permissionGuard.js';
-import { TitanBotError, ErrorTypes, handleInteractionError } from '../../utils/errorHandler.js';
-import { InteractionHelper } from '../../utils/interactionHelper.js';
-import { logger } from '../../utils/logger.js';
-import levelDashboard from './modules/level_dashboard.js';
 
-export default {
-    data: new SlashCommandBuilder()
-        .setName('level')
-        .setDescription('Manage the leveling system')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
-        .setDMPermission(false)
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName('setup')
-                .setDescription('Set up the leveling system — this also enables it')
-                .addChannelOption((option) =>
-                    option
-                        .setName('channel')
-                        .setDescription('Channel to send level-up notifications in')
-                        .addChannelTypes(ChannelType.GuildText)
-                        .setRequired(true),
-                )
-                .addIntegerOption((option) =>
-                    option
-                        .setName('xp_min')
-                        .setDescription('Minimum XP awarded per message (default: 15)')
-                        .setMinValue(1)
-                        .setMaxValue(500)
-                        .setRequired(false),
-                )
-                .addIntegerOption((option) =>
-                    option
-                        .setName('xp_max')
-                        .setDescription('Maximum XP awarded per message (default: 25)')
-                        .setMinValue(1)
-                        .setMaxValue(500)
-                        .setRequired(false),
-                )
-                .addStringOption((option) =>
-                    option
-                        .setName('message')
                         .setDescription(
                             'Level-up message. Use {user} and {level} as placeholders (default provided)',
                         )
